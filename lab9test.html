@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Intro to map components - Create a 2D map | Sample | ArcGIS Maps SDK for JavaScript 4.30</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.30/"></script>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewDiv"></div>
+  <div id="dataAttribution" style="text-align: center; padding: 10px;">
+    Data provided by <a href="https://www.clarku.edu/departments/hero-program/" target="_blank">Clark University HERO Program</a>
+  </div>
+  <script>
+    require([
+      "esri/Map", 
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Legend",
+      "esri/widgets/LayerList"
+    ], (Map, MapView, FeatureLayer, Legend, LayerList) => {
+      
+      const map = new Map({
+        basemap: "dark-gray"
+      });
+
+      
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        zoom: 4,
+        center: [-71.39, 41.83] // longitude, latitude
+      });
+
+      const baseLayer = new FeatureLayer({
+    portalItem: {
+      id: "a171604da3dc42b0befc156d8b23b9d5"
+    },
+    popupTemplate: {
+      title: "Land Cover Details",
+      content: [
+        {
+          type: "fields",
+          fieldInfos: [
+                { fieldName: "date_built", label: "Date Built" },
+                { fieldName: "solar_area", label: "Solar Area" },
+              ]
+        },
+        {
+          type: "media",
+          mediaInfos: [{
+            title: "<b>Land Cover Classes</b>",
+            type: "column-chart",
+            caption: "Distribution of land cover classes in the selected area and surrounding in Square Meters.",
+            value: {
+              fields: ["forest", "wetland", "developed", "water", "grassland", "unknown", "agricultur", "snow", "barren"],
+              <!--normalizeField: null-->
+            },
+            chartOptions: {
+              colors: ["#4CAF50", "#2196F3", "#FF9800", "#03A9F4", "#8BC34A", "#9E9E9E", "#FFC107", "#00BCD4", "#795548"]
+            }
+          }]
+        }
+      ]
+    }
+  });
+
+      const yrRenderer = {
+  type: "unique-value",
+  legendOptions: {
+            title: "Built Year for Solar Panel"
+          },
+  field: "year",
+  uniqueValueInfos: [
+    {
+      value: "2011",
+      symbol: { type: "simple-fill", color: "#d92b30", outline: { width: 0 } },
+      label: "Year 2011"
+    },
+    {
+      value: "2012",
+      symbol: { type: "simple-fill", color: "#e07b39", outline: { width: 0 } },
+      label: "Year 2012"
+    },
+    {
+      value: "2013",
+      symbol: { type: "simple-fill", color: "#f2b44e", outline: { width: 0 } },
+      label: "Year 2013"
+    },
+    {
+      value: "2014",
+      symbol: { type: "simple-fill", color: "#ffd700", outline: { width: 0 } },
+      label: "Year 2014"
+    },
+    {
+      value: "2015",
+      symbol: { type: "simple-fill", color: "#b4d455", outline: { width: 0 } },
+      label: "Year 2015"
+    },
+    {
+      value: "2016",
+      symbol: { type: "simple-fill", color: "#66c2a5", outline: { width: 0 } },
+      label: "Year 2016"
+    },
+    {
+      value: "2017",
+      symbol: { type: "simple-fill", color: "#4daf4a", outline: { width: 0 } },
+      label: "Year 2017"
+    },
+    {
+      value: "2018",
+      symbol: { type: "simple-fill", color: "#377eb8", outline: { width: 0 } },
+      label: "Year 2018"
+    },
+    {
+      value: "2019",
+      symbol: { type: "simple-fill", color: "#984ea3", outline: { width: 0 } },
+      label: "Year 2019"
+    },
+    {
+      value: "2020",
+      symbol: { type: "simple-fill", color: "#ff7f00", outline: { width: 0 } },
+      label: "Year 2020"
+    },
+    {
+      value: "2021",
+      symbol: { type: "simple-fill", color: "#cab2d6", outline: { width: 0 } },
+      label: "Year 2021"
+    },
+    {
+      value: "2022",
+      symbol: { type: "simple-fill", color: "#3cccb4", outline: { width: 0 } },
+      label: "Year 2022"
+    }
+  ]
+};
+
+baseLayer.renderer = yrRenderer;
+
+
+
+
+map.add(baseLayer);
+
+  view.when(() => {
+    const legend = new Legend({
+      view: view,
+      layerInfos: [{ layer: baseLayer, title: "Solar Panel" }]
+    });
+    const layerList = new LayerList({ view: view });
+    view.ui.add(legend, "bottom-right");
+    view.ui.add(layerList, "bottom-left");
+  });
+});
+  </script>
+</body>
+</html>
